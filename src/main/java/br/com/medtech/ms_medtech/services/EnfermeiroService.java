@@ -29,7 +29,6 @@ public class EnfermeiroService {
     private final LoginRepository loginRepository;
     private final EnfermeiroMapper enfermeiroMapper;
     private final UUIDUtils uuidUtils;
-    private final UsuarioProducerService usuarioProducerService;
 
     private final String MESSAGE_ENFERMEIRO_ENCONTRADO = "este enfermeiro já existe no sistema";
     private final String MESSAGE_ENFERMEIRO_NAO_ENCONTRADO = "este enfermeiro não está cadastrado";
@@ -48,7 +47,6 @@ public class EnfermeiroService {
         enfermeiro.setDataCadastro(LocalDateTime.now());
         enfermeiro.setLogin(buscandoLogin);
         enfermeiro.setEnabled(true);
-        this.usuarioProducerService.enviarUsuario(enfermeiro);
         this.enfermeiroRepository.save(enfermeiro);
     }
 
