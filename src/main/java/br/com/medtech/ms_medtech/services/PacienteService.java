@@ -28,7 +28,6 @@ public class PacienteService {
     private final LoginRepository loginRepository;
     private final PacienteMapper pacienteMapper;
     private final UUIDUtils uuidUtils;
-    private final UsuarioProducerService usuarioProducerService;
 
     private final String MESSAGE_PACIENTE_ENCONTRADO = "este paciente já existe no sistema";
     private final String MESSAGE_PACIENTE_NAO_ENCONTRADO = "este paciente não está cadastrado";
@@ -47,7 +46,6 @@ public class PacienteService {
         paciente.setDataCadastro(LocalDateTime.now());
         paciente.setLogin(buscandoLogin);
         paciente.setEnabled(true);
-        this.usuarioProducerService.enviarUsuario(paciente);
         this.pacienteRepository.save(paciente);
     }
 

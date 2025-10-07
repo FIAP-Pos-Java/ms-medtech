@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfiguration {
 
-    public static final String EXCHANGE = "usuarios.exchange";
-    public static final String QUEUE = "usuarios.fila";
-    public static final String ROUTING_KEY = "usuario.criado";
+    public static final String EXCHANGE = "consultas.exchange";
+    public static final String QUEUE = "consultas.fila";
+    public static final String ROUTING_KEY = "consulta.criada";
 
     @Bean
     public TopicExchange exchange() {

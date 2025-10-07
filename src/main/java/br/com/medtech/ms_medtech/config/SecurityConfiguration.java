@@ -32,6 +32,10 @@ public class SecurityConfiguration {
                     authorize.requestMatchers("/medicos/**").permitAll();
                     authorize.requestMatchers("/enfermeiros/**").permitAll();
                     authorize.requestMatchers("/pacientes/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/cadastrarConsultas/**").hasRole("ENFERMEIRO");
+                    authorize.requestMatchers(HttpMethod.GET, "/visualizarConsultas/**").hasAnyRole("MEDICO", "ENFERMEIRO");
+                    authorize.requestMatchers(HttpMethod.PUT, "/editarConsultas/**").hasRole("MEDICO");
+                    authorize.requestMatchers(HttpMethod.GET, "/visualizarConsultasPacientes/**").hasRole("PACIENTE");
                     authorize.anyRequest().authenticated();
                 })
                 .build();
