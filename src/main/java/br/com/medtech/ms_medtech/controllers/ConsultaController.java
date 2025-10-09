@@ -59,4 +59,12 @@ public class ConsultaController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deletarConsulta(
+            @RequestParam String id
+    ) {
+        this.logger.info("DELETE -> /consultas/deletar/" + id);
+        this.consultaService.deletarConsulta(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

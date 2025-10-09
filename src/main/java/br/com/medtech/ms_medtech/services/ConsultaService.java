@@ -5,6 +5,7 @@ import br.com.medtech.ms_medtech.dtos.consulta.AtualizarConsultaDTO;
 import br.com.medtech.ms_medtech.dtos.consulta.CadastrarConsultaDTO;
 import br.com.medtech.ms_medtech.dtos.consulta.MostrarTodasConsultasDTO;
 import br.com.medtech.ms_medtech.entities.Consulta;
+import br.com.medtech.ms_medtech.enums.StatusDaConsulta;
 import br.com.medtech.ms_medtech.exceptions.AcessoNegadoException;
 import br.com.medtech.ms_medtech.exceptions.ConsultaEncontradaException;
 import br.com.medtech.ms_medtech.exceptions.ConsultaNaoEncontadaException;
@@ -60,7 +61,7 @@ public class ConsultaService {
         Consulta consulta = this.consultaMapper.toCadastrarConsulta(cadastroConsultaDTO);
         consulta.setPacienteId(buscandoPaciente);
         consulta.setMedicoId(buscandoMedico);
-        this.consultaProducerService.enviarConsulta(consulta);
+        this.consultaProducerService.enviarConsulta(consulta, StatusDaConsulta.AGENDADA);
         this.consultaRepository.save(consulta);
     }
 
@@ -111,7 +112,20 @@ public class ConsultaService {
         consultaAtualizada.setMedicoId(buscarConsulta.get().getMedicoId());
         consultaAtualizada.setCriadoEm(buscarConsulta.get().getCriadoEm());
         consultaAtualizada.setAtualizadoEm(LocalDateTime.now());
-        this.consultaProducerService.enviarConsulta(consultaAtualizada);
+        this.consultaProducerService.enviarConsulta(consultaAtualizada, StatusDaConsulta.EDITADA);
         this.consultaRepository.save(consultaAtualizada);
+    }
+
+    public void deletarConsulta(String idStr){
+        UUID id = this.uuidUtils.retornaStringSemHifen(idStr);
+        var buscarConsulta = this.consultaRepository.findById(id);
+
+        if(buscarConsulta.isEmpty()){
+            throw new ConsultaNaoEncontadaException(MESSAGE_CONSULTA_NAO_ENCONTRADA);
+        }
+
+        this.consultaRepository.deleteById(id);
+
+        this.consultaProducerService.cancelarConsulta(buscarConsulta.get(), StatusDaConsulta.CANCELADA);
     }
 }

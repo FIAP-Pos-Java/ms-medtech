@@ -2,7 +2,9 @@ package br.com.medtech.ms_medtech.services;
 
 import br.com.medtech.ms_medtech.config.RabbitMQConfiguration;
 import br.com.medtech.ms_medtech.dtos.rabbit.EnviarConsultaDTO;
+import br.com.medtech.ms_medtech.dtos.rabbit.NotificacaoDTO;
 import br.com.medtech.ms_medtech.entities.Consulta;
+import br.com.medtech.ms_medtech.enums.StatusDaConsulta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,25 @@ public class ConsultaProducerService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void enviarConsulta(Consulta consulta) {
-        EnviarConsultaDTO dto = new EnviarConsultaDTO(
+    public void enviarConsulta(Consulta consulta, StatusDaConsulta status) {
+        NotificacaoDTO dto = new NotificacaoDTO(
+                consulta.getPacienteId().getId(),
+                consulta.getMedicoId().getId(),
                 consulta.getDataConsulta(),
-                consulta.getPacienteId(),
-                consulta.getMedicoId()
+                status
         );
 
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.EXCHANGE, RabbitMQConfiguration.ROUTING_KEY, dto);
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.EXCHANGE_NAME, RabbitMQConfiguration.ROUTING_KEY_MEDTECH_CORE_AGENDADA, dto);
+    }
+
+    public void cancelarConsulta(Consulta consulta, StatusDaConsulta status) {
+        NotificacaoDTO dto = new NotificacaoDTO(
+                consulta.getPacienteId().getId(),
+                consulta.getMedicoId().getId(),
+                consulta.getDataConsulta(),
+                status
+        );
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.EXCHANGE_NAME, RabbitMQConfiguration.ROUTING_KEY_MEDTECH_CORE_CANCELADA, dto);
     }
 }

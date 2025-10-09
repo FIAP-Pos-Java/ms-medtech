@@ -12,23 +12,39 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfiguration {
 
-    public static final String EXCHANGE = "consultas.exchange";
-    public static final String QUEUE = "consultas.fila";
-    public static final String ROUTING_KEY = "consulta.criada";
+    public static final String EXCHANGE_NAME = "consultas.exchange";
+    public static final String QUEUE_MEDTECH_CORE_AGENDADA = "consulta.medtech.core.agendada.queue";
+    public static final String QUEUE_MEDTECH_CORE_CANCELADA = "consulta.medtech.core.cancelada.queue";
+    public static final String ROUTING_KEY_MEDTECH_CORE_AGENDADA = "consulta.medtech.core.agendada";
+    public static final String ROUTING_KEY_MEDTECH_CORE_CANCELADA = "consulta.medtech.core.cancelada";
 
     @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE);
+    public DirectExchange consultasExchange() {
+        return new DirectExchange(EXCHANGE_NAME);
     }
 
     @Bean
-    public Queue queue() {
-        return new Queue(QUEUE);
+    public Queue queueMedtechCoreAgendada() {
+        return new Queue(QUEUE_MEDTECH_CORE_AGENDADA, true);
     }
 
     @Bean
-    public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+    public Queue queueMedtechCoreCancelada() {
+        return new Queue(QUEUE_MEDTECH_CORE_CANCELADA, true);
+    }
+
+    @Bean
+    public Binding bindingMedtechCoreAgendada(Queue queueMedtechCoreAgendada, DirectExchange consultasExchange) {
+        return BindingBuilder.bind(queueMedtechCoreAgendada)
+                .to(consultasExchange)
+                .with(ROUTING_KEY_MEDTECH_CORE_AGENDADA);
+    }
+
+    @Bean
+    public Binding bindingMedtechCoreCancelada(Queue queueMedtechCoreCancelada, DirectExchange consultasExchange) {
+        return BindingBuilder.bind(queueMedtechCoreCancelada)
+                .to(consultasExchange)
+                .with(ROUTING_KEY_MEDTECH_CORE_CANCELADA);
     }
 
     @Bean
