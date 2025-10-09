@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record NotificacaoDTO(
+        UUID id,
         UUID pacienteId,
         UUID medicoId,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime dataConsulta,

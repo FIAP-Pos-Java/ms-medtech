@@ -17,6 +17,7 @@ public class ConsultaProducerService {
 
     public void enviarConsulta(Consulta consulta, StatusDaConsulta status) {
         NotificacaoDTO dto = new NotificacaoDTO(
+                consulta.getId(),
                 consulta.getPacienteId().getId(),
                 consulta.getMedicoId().getId(),
                 consulta.getDataConsulta(),
@@ -28,6 +29,7 @@ public class ConsultaProducerService {
 
     public void cancelarConsulta(Consulta consulta, StatusDaConsulta status) {
         NotificacaoDTO dto = new NotificacaoDTO(
+                consulta.getId(),
                 consulta.getPacienteId().getId(),
                 consulta.getMedicoId().getId(),
                 consulta.getDataConsulta(),
