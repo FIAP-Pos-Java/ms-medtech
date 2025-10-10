@@ -45,12 +45,14 @@ public class ConsultaService {
 
 
     public void cadastrar(CadastrarConsultaDTO cadastroConsultaDTO) {
-        var buscandoPaciente = this.pacienteRepository.findById(cadastroConsultaDTO.paciente().getId())
+        UUID uuidPaciente = cadastroConsultaDTO.paciente().getId();
+        UUID uuidMedico = cadastroConsultaDTO.medico().getId();
+
+        var buscandoPaciente = this.pacienteRepository.findByLogin_Id(uuidPaciente)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(MESSAGE_PACIENTE_NAO_ENCONTRADO));
 
-        var buscandoMedico = this.medicoRepository.findById(cadastroConsultaDTO.medico().getId())
+        var buscandoMedico = this.medicoRepository.findByLogin_Id(uuidMedico)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(MESSAGE_MEDICO_NAO_ENCONTRADO));
-
 
         var buscandoConsulta = this.consultaRepository.findByObservacao(cadastroConsultaDTO.observacao());
 
@@ -61,8 +63,7 @@ public class ConsultaService {
         Consulta consulta = this.consultaMapper.toCadastrarConsulta(cadastroConsultaDTO);
         consulta.setPacienteId(buscandoPaciente);
         consulta.setMedicoId(buscandoMedico);
-        this.consultaProducerService.enviarConsulta(consulta, StatusDaConsulta.AGENDADA);
-        this.consultaRepository.save(consulta);
+        this.consultaProducerService.enviarConsulta(consulta);
     }
 
     public Page<MostrarTodasConsultasDTO> buscarTodasConsultas(int page, int size){
@@ -112,7 +113,7 @@ public class ConsultaService {
         consultaAtualizada.setMedicoId(buscarConsulta.get().getMedicoId());
         consultaAtualizada.setCriadoEm(buscarConsulta.get().getCriadoEm());
         consultaAtualizada.setAtualizadoEm(LocalDateTime.now());
-        this.consultaProducerService.enviarConsulta(consultaAtualizada, StatusDaConsulta.EDITADA);
+        this.consultaProducerService.enviarConsulta(consultaAtualizada);
         this.consultaRepository.save(consultaAtualizada);
     }
 
@@ -126,6 +127,6 @@ public class ConsultaService {
 
         this.consultaRepository.deleteById(id);
 
-        this.consultaProducerService.cancelarConsulta(buscarConsulta.get(), StatusDaConsulta.CANCELADA);
+        this.consultaProducerService.cancelarConsulta(buscarConsulta.get());
     }
 }

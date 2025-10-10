@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfiguration {
 
-    public static final String EXCHANGE_NAME = "consultas.exchange";
+    public static final String EXCHANGE_NAME = "consultas.core.exchange";
     public static final String QUEUE_MEDTECH_CORE_AGENDADA = "consulta.medtech.core.agendada.queue";
     public static final String QUEUE_MEDTECH_CORE_CANCELADA = "consulta.medtech.core.cancelada.queue";
     public static final String ROUTING_KEY_MEDTECH_CORE_AGENDADA = "consulta.medtech.core.agendada";
