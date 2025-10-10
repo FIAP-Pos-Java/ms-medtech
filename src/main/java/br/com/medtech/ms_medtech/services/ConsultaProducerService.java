@@ -15,25 +15,23 @@ public class ConsultaProducerService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void enviarConsulta(Consulta consulta, StatusDaConsulta status) {
+    public void enviarConsulta(Consulta consulta) {
         NotificacaoDTO dto = new NotificacaoDTO(
                 consulta.getId(),
                 consulta.getPacienteId().getId(),
                 consulta.getMedicoId().getId(),
-                consulta.getDataConsulta(),
-                status
+                consulta.getDataConsulta()
         );
 
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.EXCHANGE_NAME, RabbitMQConfiguration.ROUTING_KEY_MEDTECH_CORE_AGENDADA, dto);
     }
 
-    public void cancelarConsulta(Consulta consulta, StatusDaConsulta status) {
+    public void cancelarConsulta(Consulta consulta) {
         NotificacaoDTO dto = new NotificacaoDTO(
                 consulta.getId(),
                 consulta.getPacienteId().getId(),
                 consulta.getMedicoId().getId(),
-                consulta.getDataConsulta(),
-                status
+                consulta.getDataConsulta()
         );
 
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.EXCHANGE_NAME, RabbitMQConfiguration.ROUTING_KEY_MEDTECH_CORE_CANCELADA, dto);
